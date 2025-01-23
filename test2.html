@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .invoice {
+            width: 210mm;
+            /*height: 297mm;*/
+            padding: 10mm;
+            margin: auto;
+            /*  border: 1px solid #ccc;*/
+            background-color: #fff;
+            box-sizing: border-box;
+        }
+
+        header,
+        .buyer-and-invoice,
+        .product-details,
+        .table-section,
+        .details-section,
+        footer {
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            text-align: center;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        p {
+            font-size: 14px;
+        }
+
+        .seller-details {
+            text-align: center;
+            line-height: 6px;
+            /* Adjusted line height */
+        }
+
+        footer {
+            line-height: 8px;
+            /* Adjusted line height */
+        }
+
+        .buyer-and-invoice {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .buyer-details,
+        .invoice-details {
+            width: 45%;
+            border: 1px solid #ccc;
+            padding: 10px;
+            line-height: 6px;
+            /* Adjusted line height */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #000;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        table tbody {
+            font-size: 12px;
+        }
+
+        .product-details table th,
+        .product-details table td {
+            text-align: center;
+        }
+
+        .product-details table th:nth-child(1),
+        .product-details table td:nth-child(1) {
+            width: 5%;
+        }
+
+        .product-details table th:nth-child(2),
+        .product-details table td:nth-child(2) {
+            width: 31%;
+            text-align: left;
+        }
+
+        .product-details table th:nth-child(3),
+        .product-details table td:nth-child(3) {
+            width: 7%;
+        }
+
+        .product-details table th:nth-child(4),
+        .product-details table td:nth-child(4) {
+            width: 9%;
+        }
+
+        .product-details table th:nth-child(5),
+        .product-details table td:nth-child(5) {
+            width: 9%;
+        }
+
+        .product-details table th:nth-child(6),
+        .product-details table td:nth-child(6) {
+            width: 7%;
+        }
+        .product-details table th:nth-child(7),
+        .product-details table td:nth-child(7) {
+            width: 9%;
+        }
+        .product-details table th:nth-child(8),
+        .product-details table td:nth-child(8) {
+            width: 20%;
+            text-align: right !important;
+        }
+
+        tbody td:nth-child(8) {
+            text-align: right;
+        }
+
+        tfoot td {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        tfoot .totalAmount {
+            text-align: right !important;
+        }
+
+        .details-section {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .tax-details,
+        .amount-details {
+            width: 48%;
+            padding-top: 20px;
+        }
+
+        .tax-details table {
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .tax-details th {
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+
+        .amount-details-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .amount-details-box p {
+            margin: 0;
+            padding: 5px 0;
+            font-size: 13px;
+        }
+
+        footer {
+            text-align: right;
+        }
+
+
+        @media print {
+            body {
+                background-color: #fff;
+                margin: 0;
+                padding: 0;
+            }
+
+            .invoice {
+                border: none;
+                width: 100%;
+                max-width: 210mm;
+                margin: 0px;
+                padding: 3mm;
+                box-sizing: border-box;
+            }
+
+            .Signatory {
+                page-break-after: always;
+            }
+
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+    <div class="invoice" id="invoice">
+        <header>
+            <h1>GST Invoice</h1>
+            <div class="seller-details">
+                <p style="font-size: 20px;"><b><span id="displaySellerName">(Firm Name)</span></b></p>
+                <p><span id="displaySellerAddress">(Seller Address)</span></p>
+                <p><span id="displaySellerState">(Seller State)</span>, <span id="displaySellerCode">(Seller
+                        Code)</span></p>
+                <p>GSTIN/UIN:<span id="displaySellerGSTIN"> (Seller GSTIN/UIN Number)</span></p>
+            </div>
+        </header>
+        <section>
+            <div class="buyer-and-invoice">
+                <div class="buyer-details">
+                    <p>Buyer:</p>
+                    <p><b><span id="displayBuyerName">(Buyer Firm Address)</span></b></p>
+                    <p><span id="displayBuyerAddress">(Buyer Address)</span></p>
+                    <p><span id="displayBuyerState">(Buyer State)</span>, <span id="displayBuyerCode">(Buyer
+                            Code)</span></p>
+                    <p>GSTIN/UIN: <span id="displayBuyerGSTIN"> (Buyer GSTIN/UIN Number)</span></p>
+                    <p>Place Of Supply: <span id="displayPlaceOfSupply"> (PlaceOfSupply)</span></p>
+                </div>
+                <div class="invoice-details">
+                    <p><strong>Invoice No:</strong> <span id="displayInvoiceNo"> (Invoice No)</span></p>
+                    <p><strong>Invoice Date:</strong> <span id="displayInvoiceDate"> (Invoice Date)</span></p>
+                </div>
+            </div>
+        </section>
+        <div class="productItems">
+            <table>
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Description of Goods</th>
+                        <th>HSN/SAC</th>
+                        <th>GST Rate</th>
+                        <th>Quantity</th>
+                        <th>Rate</th>
+                        <th>Per</th>
+                        <th style="text-align: right;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="productItems">
+                    <!-- Items will be populated here -->
+
+
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="7"><strong>Total</strong></td>
+                        <td class="totalAmount" id="totalAmount"> (total amount)</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div id="taxAndSignatory" class="page-break">
+            <div class="details-section">
+                <div class="tax-details">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="2">Tax Details</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tax-tbody">
+                            <tr>
+                                <td>CGST</td>
+                                <td id="cgst"> (CGST Amount)</td>
+                            </tr>
+                            <tr>
+                                <td>SGST</td>
+                                <td id="sgst"> (SGST Amount)</td>
+                            </tr>
+                            <tr>
+                                <td>IGST</td>
+                                <td id="igst"> (IGST Amount)</td>
+                            </tr>
+                            <tr>
+                                <td>Total Tax Amount</td>
+                                <td id="totalTaxAmount"> (total tax amount)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="amount-details">
+                    <div class="amount-details-box">
+                        <p style="font-size: 14px;"><strong>Total Chargeable Amount:</strong></p>
+                        <p style="font-weight: 700;"><span id="totalChargeableAmount">(total chargeable amount)</span>
+                        </p>
+                    </div>
+                    <div class="amount-details-box">
+                        <p style="font-size: 14px;"><strong>Chargeable Amount (in words):</strong></p>
+                        <p>INR <span id="totalamountInWords">(amount in words)</span></p>
+                    </div>
+                </div>
+            </div>
+            <footer>
+                <div class="Signatory">
+                    <p>For <span id="sellerFirmNameFooter">(Seller Firm Name)</span></p>
+                    <br>
+                    <br>
+                    <p>Authorized Signatory</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script>
+
+        function generatePDF() {
+            const element = document.getElementById('invoice');
+            html2pdf(element, {
+                margin: 0,
+                filename: 'invoice.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            });
+        }
+
+        function numberToWords(n) {
+            const single_digit = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+            const double_digit = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+            const below_hundred = ['Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+            if (n === 0) return 'Zero';
+
+            function translate(n) {
+                let word = "";
+                if (n < 10) {
+                    word = single_digit[n] + ' ';
+                } else if (n < 20) {
+                    word = double_digit[n - 10] + ' ';
+                } else if (n < 100) {
+                    let rem = translate(n % 10);
+                    word = below_hundred[Math.floor(n / 10) - 2] + ' ' + rem;
+                } else if (n < 1000) {
+                    word = single_digit[Math.floor(n / 100)] + ' Hundred ' + translate(n % 100);
+                } else if (n < 100000) {
+                    word = translate(Math.floor(n / 1000)).trim() + ' Thousand ' + translate(n % 1000);
+                } else if (n < 10000000) {
+                    word = translate(Math.floor(n / 100000)).trim() + ' Lakh ' + translate(n % 100000);
+                } else if (n < 1000000000) {
+                    word = translate(Math.floor(n / 10000000)).trim() + ' Crore ' + translate(n % 10000000);
+                }
+                return word;
+            }
+
+            let result = '';
+            let rupees = Math.floor(n);
+            let paise = Math.round((n - rupees) * 100);
+
+            if (rupees > 0) {
+                result += translate(rupees).trim() + ' Rupees ';
+            }
+            if (paise > 0) {
+                result += 'and ' + translate(paise).trim() + ' Paise ';
+            }
+            return result.trim() + ' Only';
+        }
+
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const invoiceData = JSON.parse(localStorage.getItem('invoiceData'));
+
+            if (!invoiceData) {
+                return;
+            }
+
+            document.getElementById('displayInvoiceNo').textContent = invoiceData.invoiceNo || '';
+
+            // Rearrange the parts to match the "dd-mm-yyyy" format
+            const dateString = invoiceData.invoiceDate;
+            const dateParts = dateString.split('-');
+            const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+
+            document.getElementById('displayInvoiceDate').textContent = formattedDate || '';
+            document.getElementById('displaySellerName').textContent = invoiceData.sellerName || '';
+            document.getElementById('displaySellerAddress').textContent = invoiceData.sellerAddress || '';
+            document.getElementById('displaySellerState').textContent = invoiceData.sellerState || '';
+            document.getElementById('displaySellerCode').textContent = invoiceData.sellerCode || '';
+            document.getElementById('displaySellerGSTIN').textContent = invoiceData.sellerGSTIN || '';
+
+            document.getElementById('displayBuyerName').textContent = invoiceData.buyerName || '';
+            document.getElementById('displayBuyerAddress').textContent = invoiceData.buyerAddress || '';
+            document.getElementById('displayBuyerState').textContent = invoiceData.buyerState || '';
+            document.getElementById('displayBuyerCode').textContent = invoiceData.buyerCode || '';
+            document.getElementById('displayBuyerGSTIN').textContent = invoiceData.buyerGSTIN || '';
+            document.getElementById('displayPlaceOfSupply').textContent = invoiceData.placeOfSupply || '';
+            document.getElementById('sellerFirmNameFooter').textContent = invoiceData.sellerName || '';
+
+
+            const productTableBody = document.getElementById('productItems');
+
+            let totalCGST = 0;
+            let totalSGST = 0;
+            let totalIGST = 0;
+            let totalAmount = 0;
+
+            invoiceData.products.forEach((product, index) => {
+                const row = productTableBody.insertRow(index);
+
+
+                let newRate;
+                if (invoiceData.rategst === 'withgst') {
+                    newRate = product.rate / (1 + (product.gstRate / 100));
+                } else {
+                    newRate = product.rate;
+                }
+
+                const amount = product.quantity * newRate;
+                totalCGST += (amount * product.cgst) / 100;
+                totalSGST += (amount * product.sgst) / 100;
+                totalIGST += (amount * product.igst) / 100;
+                totalAmount += amount;
+
+
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${product.description}</td>
+                    <td>${product.hsn}</td>
+                    <td>${product.gstRate}%</td>
+                    <td>${product.quantity}</td>
+                    <td>${newRate.toFixed(2)}</td>
+                    <td>${product.per}</td>
+                    <td>${amount.toFixed(2)}</td>
+                `;
+            });
+            document.getElementById('totalAmount').textContent = `₹${totalAmount.toFixed(2)}`;
+            document.getElementById('cgst').textContent = `₹${totalCGST.toFixed(2)}`;
+            document.getElementById('sgst').textContent = `₹${totalSGST.toFixed(2)}`;
+            document.getElementById('igst').textContent = `₹${totalIGST.toFixed(2)}`;
+            document.getElementById('totalTaxAmount').textContent = `₹${(totalCGST + totalSGST + totalIGST).toFixed(2)}`;
+
+
+            const totalTaxAmount = (totalCGST + totalSGST + totalIGST).toFixed(2);
+            const totalAmountPaid = (totalAmount + totalCGST + totalSGST + totalIGST).toFixed(2);
+            const amountInWords = numberToWords(totalAmountPaid);
+
+
+            document.getElementById('totalChargeableAmount').textContent = `₹${totalAmountPaid}`;
+            document.getElementById('totalamountInWords').textContent = `${amountInWords}`;
+
+            const productRows = productTableBody.getElementsByTagName('tr').length;
+
+            if (productRows >= 8) {
+
+                const taxAndSignatory = document.getElementById('taxAndSignatory');
+                taxAndSignatory.style.pageBreakBefore = 'always'; // For older browsers
+                taxAndSignatory.style.breakBefore = 'page'; // For newer browsers
+            }
+
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,
+        h2,
+        h3 {
+            text-align: center;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .gstratediv {
+            display: flex;
+            align-items: center;
+            padding-bottom: 25px;
+        }
+
+        .gstratediv label {
+            margin-right: 10px;
+            width: 15%;
+        }
+
+        .gstratediv select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .gstratediv option {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        button[type="button"].delete {
+            background: #dc3545;
+        }
+
+        button[type="button"].delete:hover {
+            background: #c82333;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #successMessage {
+            display: none;
+            color: green;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            table,
+            thead,
+            tbody,
+            th,
+            td,
+            tr {
+                display: block;
+            }
+
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+
+            tr {
+                margin: 0 0 10px 0;
+            }
+
+            td {
+                border: none;
+                position: relative;
+                padding-left: 50%;
+                text-align: right;
+            }
+
+            td:before {
+                position: absolute;
+                top: 50%;
+                left: 10px;
+                transform: translateY(-50%);
+                white-space: nowrap;
+            }
+
+            td:nth-of-type(1):before {
+                content: "S.No.";
+            }
+
+            td:nth-of-type(2):before {
+                content: "HSN/SAC";
+            }
+
+            td:nth-of-type(3):before {
+                content: "Description of Goods";
+            }
+
+            td:nth-of-type(4):before {
+                content: "GST Rate";
+            }
+
+            td:nth-of-type(5):before {
+                content: "CGST";
+            }
+
+            td:nth-of-type(6):before {
+                content: "SGST";
+            }
+
+            td:nth-of-type(7):before {
+                content: "IGST";
+            }
+
+            td:nth-of-type(8):before {
+                content: "Quantity";
+            }
+
+            td:nth-of-type(9):before {
+                content: "Rate";
+            }
+
+            td:nth-of-type(10):before {
+                content: "Per";
+            }
+
+            td:nth-of-type(11):before {
+                content: "Action";
+            }
+
+            input[type="text"],
+            input[type="date"],
+            input[type="number"] {
+                width: calc(100% - 32px);
+            }
+        }
+
+        @media (max-width: 600px) {
+            td:before {
+                font-size: 14px;
+            }
+            label {
+                font-size: 14px;}
+        }
+
+        @media (max-width: 480px) {
+
+            input[type="text"],
+            input[type="date"],
+            input[type="number"] {
+                width: calc(100% - 20px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Invoice Form</h1>
+        <form id="invoice-form">
+            <label for="invoiceNo">Invoice No:</label>
+            <input type="text" id="invoiceNo" name="invoiceNo" required autocomplete="off"><br>
+            <label for="invoiceDate">Invoice Date:</label>
+            <input type="date" id="invoiceDate" name="invoiceDate"><br>
+
+            <h2>Seller Information</h2>
+            <label for="sellerName">Firm Name:</label>
+            <input type="text" id="sellerName" name="sellerName" required><br>
+            <label for="sellerAddress">Firm Address:</label>
+            <input type="text" id="sellerAddress" name="sellerAddress" required autocomplete="off"><br>
+            <label for="sellerGSTIN">GSTIN/UIN:</label>
+            <input type="text" id="sellerGSTIN" name="sellerGSTIN" required><br>
+            <label for="sellerState">State:</label>
+            <input type="text" id="sellerState" name="sellerState" required><br>
+            <label for="sellerCode">Code:</label>
+            <input type="text" id="sellerCode" name="sellerCode" required autocomplete="off"><br>
+
+            <h2>Buyer Information</h2>
+            <label for="buyerName">Firm Name:</label>
+            <input type="text" id="buyerName" name="buyerName" required><br>
+            <label for="buyerAddress">Firm Address:</label>
+            <input type="text" id="buyerAddress" name="buyerAddress" required autocomplete="off"><br>
+            <label for="buyerGSTIN">GSTIN/UIN:</label>
+            <input type="text" id="buyerGSTIN" name="buyerGSTIN" required><br>
+            <label for="buyerState">State:</label>
+            <input type="text" id="buyerState" name="buyerState" required><br>
+            <label for="buyerCode">Code:</label>
+            <input type="text" id="buyerCode" name="buyerCode" required autocomplete="off"><br>
+            <label for="placeOfSupply">Place of Supply:</label>
+            <input type="text" id="placeOfSupply" name="placeOfSupply" required autocomplete="off"><br>
+
+            <h2>Rate Information</h2>
+            <h3>Select entered rate is with GST or without GST:</h3>
+
+            <div class="gstratediv">
+                <label for="rategst">Rate Type:</label>
+                <select id="rategst" name="rategst" required>
+                    <option value="withgst">Rate with GST</option>
+                    <option value="withoutgst">Rate without GST</option>
+                </select>
+            </div>
+
+            <h2>Product Details</h2>
+            <table id="productTable">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Description of Goods</th>
+                        <th>HSN/SAC Code</th>
+                        <th>GST Rate</th>
+                        <th class="cgst-sgst">CGST</th>
+                        <th class="cgst-sgst">SGST</th>
+                        <th class="igst hidden">IGST</th>
+                        <th>Quantity</th>
+                        <th>Rate</th>
+                        <th>Per</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="productTableBody">
+                    <tr>
+                        <td>1</td>
+                        <td><input type="text" name="description" required autocomplete="off"></td>
+                        <td><input type="number" name="hsn" autocomplete="off"></td>
+                        <td><input type="number" name="gstRate" step="0.01" required autocomplete="off"></td>
+                        <td class="cgst-sgst"><input type="number" name="cgst" step="0.01" autocomplete="off"></td>
+                        <td class="cgst-sgst"><input type="number" name="sgst" step="0.01" autocomplete="off"></td>
+                        <td class="igst hidden"><input type="number" name="igst" step="0.01" autocomplete="off"></td>
+                        <td><input type="number" name="quantity" required autocomplete="off"></td>
+                        <td><input type="number" name="rate" step="0.01" required autocomplete="off"></td>
+                        <td><input type="text" name="per" required></td>
+                        <td><button type="button" class="delete" onclick="deleteRow(this)">Delete</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" id="addRowButton">Add Row</button>
+            <button type="submit" id="submitButton">Submit</button>
+            <button type="button" id="printButton" onclick="printInvoicePage()">Print</button>
+            <!----<button type="button" id="pdfButton" onclick="generatePDF()">Generate PDF</button>-->
+
+        </form>
+        <div id="successMessage">Data saved successfully!</div>
+    </div>
+    <script>
+        function deleteRow(button) {
+            const row = button.closest('tr');
+            row.parentNode.removeChild(row);
+            updateRowNumbers();
+        }
+
+        function updateRowNumbers() {
+            const tableBody = document.getElementById('productTableBody');
+            const rows = tableBody.rows;
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].cells[0].innerText = i + 1;
+            }
+        }
+
+        function toggleTaxColumns() {
+            const sellerState = document.getElementById('sellerCode').value;
+            const buyerState = document.getElementById('buyerCode').value;
+            const isSameState = sellerState === buyerState;
+
+            document.querySelectorAll('.cgst-sgst').forEach(el => {
+                el.classList.toggle('hidden', !isSameState);
+            });
+            document.querySelectorAll('.igst').forEach(el => {
+                el.classList.toggle('hidden', isSameState);
+            });
+        }
+
+        document.getElementById('invoice-form').addEventListener('input', toggleTaxColumns);
+        document.getElementById('addRowButton').addEventListener('click', function () {
+            const tableBody = document.getElementById('productTableBody');
+            const rowCount = tableBody.rows.length;
+            const row = tableBody.insertRow(rowCount);
+
+            row.innerHTML = `
+                <td>${rowCount + 1}</td>
+                <td><input type="text" name="description" required autocomplete="off"></td>
+                <td><input type="number" name="hsn" autocomplete="off"></td>
+                <td><input type="number" name="gstRate" step="0.01"  required autocomplete="off"></td>
+                <td class="cgst-sgst"><input type="number" name="cgst" step="0.01"   autocomplete="off"></td>
+                <td class="cgst-sgst"><input type="number" name="sgst" step="0.01"  autocomplete="off"></td>
+                <td class="igst hidden"><input type="number" name="igst" step="0.01" autocomplete="off" ></td>
+                <td><input type="number" name="quantity" required autocomplete="off"></td>
+                <td><input type="number" name="rate" required step="0.01" autocomplete="off"></td>
+                <td><input type="text" name="per" required></td>
+                <td><button type="button" class="delete" onclick="deleteRow(this)">Delete</button></td>
+            `;
+
+            toggleTaxColumns();
+        });
+
+        window.addEventListener('load', toggleTaxColumns);
+
+
+
+        document.getElementById('invoice-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const invoiceData = {};
+            formData.forEach((value, key) => {
+                if (!invoiceData[key]) {
+                    invoiceData[key] = value;
+                } else {
+                    if (!Array.isArray(invoiceData[key])) {
+                        invoiceData[key] = [invoiceData[key]];
+                    }
+                    invoiceData[key].push(value);
+                }
+            });
+
+            const productData = [];
+
+            document.querySelectorAll('#productTableBody tr').forEach((row) => {
+
+                const product = {
+                    description: row.querySelector('input[name="description"]').value,
+                    hsn: row.querySelector('input[name="hsn"]').value,
+                    gstRate: parseFloat(row.querySelector('input[name="gstRate"]').value),
+                    cgst: parseFloat(row.querySelector('input[name="cgst"]').value || 0),
+                    sgst: parseFloat(row.querySelector('input[name="sgst"]').value || 0),
+                    igst: parseFloat(row.querySelector('input[name="igst"]').value || 0),
+                    quantity: row.querySelector('input[name="quantity"]').value,
+                    rate: parseFloat(row.querySelector('input[name="rate"]').value),
+                    per: row.querySelector('input[name="per"]').value,
+                };
+
+                productData.push(product);
+            });
+
+            invoiceData.products = productData;
+
+            localStorage.setItem('invoiceData', JSON.stringify(invoiceData));
+
+            // Show the success message
+            document.getElementById('successMessage').style.display = 'block';
+
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+
+            // Allow the form to stay interactive after submission
+            document.querySelectorAll('input, select').forEach(input => input.disabled = false);
+
+            // Optionally clear success message after a few seconds
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 4000);
+        });
+
+        // Listen for changes to hide success message when the form is modified
+        document.getElementById('invoice-form').addEventListener('input', function () {
+            document.getElementById('successMessage').style.display = 'none';
+        });
+
+
+
+        function printInvoicePage() {
+            // Open a new window
+            const printWindow = window.open('test2.html', '_blank');
+            // Wait until the new window loads
+            printWindow.onload = function () {
+                // Print the content of the new window
+                printWindow.print();
+            };
+        }
+
+        /*  function generatePDF() {
+              fetch('demo8.html')
+                  .then(response => response.text())
+                  .then(html => {
+                      const printWindow = window.open('', '_blank');
+                      printWindow.document.write(html);
+                      printWindow.document.close();
+                      printWindow.onload = function() {
+                          const element = printWindow.document.body;
+                          html2pdf().from(element).save('invoice.pdf');
+                      };
+                  })
+                  .catch(error => console.error('Error fetching the demo6.html page:', error));
+          }*/
+
+        document.getElementById('generatePDF').addEventListener('click', generatePDF);
+
+        function generatePDF() {
+            fetch('test2.html')
+                .then(response => response.text())
+                .then(html => {
+                    // Create a new temporary container to hold the HTML content
+                    const container = document.createElement('div');
+                    container.style.position = 'absolute';
+                    container.style.left = '-9999px'; // Hide it off-screen
+                    container.innerHTML = html;
+                    document.body.appendChild(container);
+
+                    // Apply embedded styles
+                    const styles = container.querySelectorAll('style');
+                    styles.forEach(style => {
+                        const styleTag = document.createElement('style');
+                        styleTag.textContent = style.textContent;
+                        document.head.appendChild(styleTag);
+                    });
+
+                    // Execute scripts
+                    const scripts = container.querySelectorAll('script');
+                    const scriptPromises = Array.from(scripts).map(script => {
+                        return new Promise((resolve) => {
+                            const scriptTag = document.createElement('script');
+                            scriptTag.textContent = script.textContent;
+                            scriptTag.onload = resolve;
+                            document.body.appendChild(scriptTag);
+                        });
+                    });
+
+                    // Ensure all resources are processed
+                    Promise.all(scriptPromises).then(() => {
+                        // Use requestAnimationFrame to ensure rendering is complete
+                        requestAnimationFrame(() => {
+                            requestAnimationFrame(() => {
+                                html2pdf().from(container).save('test2.pdf').then(() => {
+                                    document.body.removeChild(container); // Cleanup
+                                });
+                            });
+                        });
+                    });
+                })
+                .catch(error => console.error('Error fetching the test2.html page:', error));
+        }
+
+    </script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+</body>
+
+</html>
