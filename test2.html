@@ -41,17 +41,31 @@
 
         p {
             font-size: 14px;
+            margin-top: 7px;
+            margin-bottom: 7px;
         }
 
         .seller-details {
             text-align: center;
-            line-height: 6px;
+            line-height: 0.7;
             /* Adjusted line height */
         }
 
+        .buyer-details p,
+        .seller-details p {
+            overflow-wrap: anywhere;
+            white-space: normal;
+            word-break: break-all;
+        }
+
+        .buyer-and-invoice {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
         footer {
-            line-height: 8px;
-            /* Adjusted line height */
+            line-height: 0.7;
         }
 
         .buyer-and-invoice {
@@ -64,8 +78,7 @@
             width: 45%;
             border: 1px solid #ccc;
             padding: 10px;
-            line-height: 6px;
-            /* Adjusted line height */
+            line-height: 1;
         }
 
         table {
@@ -125,10 +138,12 @@
         .product-details table td:nth-child(6) {
             width: 7%;
         }
+
         .product-details table th:nth-child(7),
         .product-details table td:nth-child(7) {
             width: 9%;
         }
+
         .product-details table th:nth-child(8),
         .product-details table td:nth-child(8) {
             width: 20%;
@@ -186,6 +201,20 @@
             text-align: right;
         }
 
+        #signatureImage {
+            width: 120px;
+            height: 50px;
+            object-fit: contain;
+            display: block;
+            margin-left: auto;
+            margin-top: 2px;
+        }
+
+        #taxAndSignatory {
+            page-break-inside: avoid;
+            break-inside: avoid;
+            page-break-before: auto;
+        }
 
         @media print {
             body {
@@ -313,7 +342,8 @@
                 <div class="Signatory">
                     <p>For <span id="sellerFirmNameFooter">(Seller Firm Name)</span></p>
                     <br>
-                    <br>
+                    <img id="signatureImage" style="display:none;" />
+                    <br><br>
                     <p>Authorized Signatory</p>
                 </div>
             </footer>
@@ -404,6 +434,12 @@
             document.getElementById('displayPlaceOfSupply').textContent = invoiceData.placeOfSupply || '';
             document.getElementById('sellerFirmNameFooter').textContent = invoiceData.sellerName || '';
 
+            const signatureImg = document.getElementById('signatureImage');
+
+            if (invoiceData.signature) {
+                signatureImg.src = invoiceData.signature;
+                signatureImg.style.display = 'block';
+            }
 
             const productTableBody = document.getElementById('productItems');
 
@@ -464,6 +500,7 @@
                 taxAndSignatory.style.pageBreakBefore = 'always'; // For older browsers
                 taxAndSignatory.style.breakBefore = 'page'; // For newer browsers
             }
+
 
         });
     </script>
