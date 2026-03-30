@@ -214,8 +214,10 @@
             td:before {
                 font-size: 14px;
             }
+
             label {
-                font-size: 14px;}
+                font-size: 14px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -249,6 +251,8 @@
             <input type="text" id="sellerState" name="sellerState" required><br>
             <label for="sellerCode">Code:</label>
             <input type="text" id="sellerCode" name="sellerCode" required autocomplete="off"><br>
+            <label for="signature">Upload Signature (optional):</label>
+            <input type="file" id="signature" accept="image/*">
 
             <h2>Buyer Information</h2>
             <label for="buyerName">Firm Name:</label>
@@ -408,7 +412,22 @@
 
             invoiceData.products = productData;
 
-            localStorage.setItem('invoiceData', JSON.stringify(invoiceData));
+            const signatureInput = document.getElementById('signature');
+
+            if (signatureInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    invoiceData.signature = e.target.result;
+
+                    localStorage.setItem('invoiceData', JSON.stringify(invoiceData));
+
+                };
+                reader.readAsDataURL(signatureInput.files[0]);
+                return; 
+            } else {
+                invoiceData.signature = null;
+                localStorage.setItem('invoiceData', JSON.stringify(invoiceData));
+            }
 
             // Show the success message
             document.getElementById('successMessage').style.display = 'block';
